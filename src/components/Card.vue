@@ -1,29 +1,45 @@
 <script>
+  import fitty from 'fitty';
+  import { useCardOptionsStore } from '@/stores/cardOptions.vue'
   export default {
+    data() {
+      return {
+        cardOptionsStore: useCardOptionsStore()
+      }
+    },
     props: {
       imageURL: String,
       name: String,
-      setCode: String
+      setCode: String,
+      collectorNumber: String
+    },
+    computed: {
+      cardTitle() {
+        var title = ""
+        if (this.cardOptionsStore.showName) {
+          title += this.name
+        }
+        if (this.cardOptionsStore.showSetAndNumber) {
+          title += this.setCode + ":" + this.collectorNumber
+        }
+        return title
+      }
     },
     mounted() {
-      let recaptchaScript = document.createElement('script')
-      recaptchaScript.setAttribute('src', "fitty.min.js")
-      document.head.appendChild(recaptchaScript)
+      fitty('.card-title', {minSize: 6, maxSize: 20})
     },
   }
-  //import fitty from "fitty.min.js"
-  //fitty(".card-title")
 </script>
 
+
 <template>
-  <div class="card">   
+  <div class="card">
+    <div class="fit-wrapper">
+      <div class="card-title">
+        <b>{{ cardTitle }}</b>
+      </div>
+    </div>
     <img v-bind:src=imageURL />
-    <div class="card-title">
-      {{ name }}
-    </div>
-    <div class="card-set">
-      {{ setCode }}
-    </div>
   </div>
 </template>
 
@@ -34,8 +50,11 @@
   img {
     width: 100%
   }
+  .fit-wrapper {
+    text-align: center;
+  }
   .card-title {
-    width: 100%;
+    font-family: "Times New Roman", Times, serif;
     white-space: nowrap;
   }
 </style>

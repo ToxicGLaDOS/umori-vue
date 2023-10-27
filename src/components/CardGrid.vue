@@ -1,15 +1,14 @@
 <script setup>
   import Card from './Card.vue'
-  var cards = await fetch("http://localhost:8080/api/cards/search")
-  .then(response => response.json())
-  .then(json => json.results)
-  console.log(cards)
+  const props = defineProps({
+    cards: Array
+  })
 </script>
 
 <template>
   <div id="card-grid">
     <div v-for="card in cards" class="card-container">
-      <Card :imageURL=card.image_uris.normal :name=card.name :set=card.set.code />
+      <Card :imageURL=card.image_uris.normal :name=card.name :setCode=card.set.code :collectorNumber=card.collector_number />
     </div>
   </div>
 </template>
@@ -18,6 +17,7 @@
   #card-grid {
     display: inline-flex;
     flex-wrap: wrap;
+    width: 100%;
   }
   .card-container {
     width: 10%

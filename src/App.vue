@@ -4,7 +4,9 @@ import Collection from './components/Collection.vue'
 
 <template>
   <main>
-    <Collection/>
+    <Suspense>
+      <Collection/>
+    </Suspense>
   </main>
 </template>
 
