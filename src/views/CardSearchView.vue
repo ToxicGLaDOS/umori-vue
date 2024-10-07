@@ -1,6 +1,6 @@
 <script>
   import { ref } from 'vue'
-  import CardGrid from './CardGrid.vue'
+  import CardGrid from '../components/CardGrid.vue'
   import debounce from 'debounce';
   import { useCardOptionsStore } from '@/stores/cardOptions.vue'
 
