@@ -1,11 +1,11 @@
 <script setup>
-import Collection from './components/Collection.vue'
+  import { RouterView } from 'vue-router'
 </script>
 
 <template>
   <main>
     <Suspense>
-      <Collection/>
+      <RouterView/>
     </Suspense>
   </main>
 </template>
