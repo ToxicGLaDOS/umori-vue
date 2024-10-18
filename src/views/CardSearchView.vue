@@ -8,7 +8,7 @@
     methods: {
       debouceSearch: debounce(
         async function(e) {
-          var url = new URL("http://localhost:8080/api/cards/search")
+          var url = new URL(`${window.location.origin}/api/cards/search`)
           url.searchParams.append("collapsePrintings", "true")
           url.searchParams.append("nameContains", e.target.value)
           this.cards = await fetch(url)
@@ -18,6 +18,7 @@
           this.cardOptionsStore.showSetAndNumber = false
           if (this.cards.length == 1) {
             url.searchParams.set("collapsePrintings", "false")
+            url.searchParams.set("defaultOnly", "true")
             this.cards = await fetch(url)
               .then(response => response.json())
               .then(json => json.results)
@@ -30,7 +31,7 @@
       }
     },
     async setup() {
-      var cards = ref(await fetch("http://localhost:8080/api/cards/search?collapsePrintings=true")
+      var cards = ref(await fetch("/api/cards/search?collapsePrintings=true")
       .then(response => response.json())
       .then(json => json.results));
       const cardOptionsStore = useCardOptionsStore();
