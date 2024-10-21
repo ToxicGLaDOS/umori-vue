@@ -30,9 +30,22 @@
       ),
       filter: function (e) {
       },
-      addCard: function () {
+      addCard: async function () {
         console.log("Add card")
         console.log(this.cards[0])
+        var response = await fetch("/api/1/collection/update", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            card_id: this.cards[0].id,
+            quantity: 1
+          })
+        })
+
+        console.log(response)
+
         this.showCardDetailsModal = false
         this.searchQuery = ""
         this.$refs.mainSearch.focus()
@@ -85,7 +98,7 @@
 </script>
 
 <template>
-  <button id="show-modal" @click="showAddCardModal = true">Show Modal</button>
+  <button id="show-modal" @click="showAddCardModal = true">Add Card</button>
   <CardGrid :cards=this.cards />
 
   <Transition name="big-modal">
