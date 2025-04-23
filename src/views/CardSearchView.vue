@@ -32,8 +32,6 @@
       filter: function (e) {
       },
       addCard: async function () {
-        console.log("Add card")
-        console.log(this.cards[0])
         var response = await fetch("/api/1/collection/update", {
           method: "POST",
           headers: {
@@ -58,12 +56,7 @@
         console.log("select card");
         if (this.cardOptionsStore.showSetAndNumber == true && this.cards.length > 0) {
           this.showCardDetailsModal = true
-          // We have to wait until the next tick to change focus
-          // because the element doesn't exist until after
-          // the DOM is updated
-          //this.$nextTick(() => {
-          //  this.$refs.foo.addCard.focus()
-          //});
+          this.selectedCard = this.cards[0]
         }
         // TODO: Display something if condition isn't true ^
         // to tell the user why nothing is happening
@@ -89,6 +82,7 @@
     },
     data() {
       return {
+        selectedCard: null,
         showAddCardModal: false,
         showCardDetailsModal: false,
         searchQuery: ""
@@ -97,7 +91,6 @@
   }
 
   const showAddCardModal = ref(false)
-  const showCardDetailsModal = ref(false)
 </script>
 
 <template>
@@ -127,7 +120,7 @@
     </div>
   </Transition>
 
-  <CardDetailsModal :show=this.showCardDetailsModal @close="this.showCardDetailsModal = false" />
+  <CardDetailsModal :show=this.showCardDetailsModal :card=this.selectedCard @close="this.showCardDetailsModal = false" @addCard="addCard()" />
 
 </template>
 

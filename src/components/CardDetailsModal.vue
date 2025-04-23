@@ -1,16 +1,25 @@
 <script setup>
   import { watch, ref, nextTick } from 'vue'
   const props = defineProps({
-    show: Boolean
+    show: Boolean,
+    card: Object
   })
   const addCardButton = ref(null);
+  const languages = ref(null)
 
   watch(() => props.show, async (newShow, oldShow) => {
     if (newShow == true) {
-      nextTick(() => {
-        console.log(addCardButton)
+      nextTick(async () => {
         addCardButton.value.focus()
-      })
+
+        // Populate language options
+        var url = new URL(`${window.location.origin}/api/cards/langs`)
+        url.searchParams.append("set", props.card.set.code)
+        url.searchParams.append("cn", props.card.collector_number)
+        languages.value = await fetch(url)
+            .then(response => response.json())
+            .then(json => json)
+        })
     }
   })
 
@@ -30,11 +39,15 @@
 
         <div class="modal-body">
           <label>Quantity</label>
-	  <input type="number">
+          <input type="number" value="1">
           <label>Finish</label>
-          <select id="finish"></select>
+          <select id="finish">
+            <option v-for="finish in props.card.finishes">{{ finish }}</option>
+          </select>
           <label>Language</label>
-          <select id="language"></select>
+          <select id="language">
+            <option v-for="language in languages">{{ language }}</option>
+          </select>
           <label>Condition</label>
           <select id="condition">
             <option>Near Mint</option>
@@ -46,7 +59,7 @@
         </div>
 
         <div class="modal-footer">
-          <button class="modal-default-button" @click="addCard()" ref="addCardButton">Add</button>
+          <button class="modal-default-button" @click="$emit('addCard')" ref="addCardButton">Add</button>
         </div>
       </div>
     </div>
