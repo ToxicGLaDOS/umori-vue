@@ -1,6 +1,7 @@
 <script>
   import { ref } from 'vue'
   import CardGrid from '../components/CardGrid.vue'
+  import CardDetailsModal from '../components/CardDetailsModal.vue'
   import debounce from 'debounce';
   import { useCardOptionsStore } from '@/stores/cardOptions.vue'
 
@@ -54,14 +55,15 @@
         // This is probably relying on side incidental values
         // I should probably give this it's own option in cardOptionsStore
         // but it's fine for now
+        console.log("select card");
         if (this.cardOptionsStore.showSetAndNumber == true && this.cards.length > 0) {
           this.showCardDetailsModal = true
           // We have to wait until the next tick to change focus
           // because the element doesn't exist until after
           // the DOM is updated
-          this.$nextTick(() => {
-            this.$refs.addCard.focus()
-          });
+          //this.$nextTick(() => {
+          //  this.$refs.foo.addCard.focus()
+          //});
         }
         // TODO: Display something if condition isn't true ^
         // to tell the user why nothing is happening
@@ -82,7 +84,8 @@
       }
     },
     components: {
-      CardGrid: CardGrid
+      CardGrid: CardGrid,
+      CardDetailsModal: CardDetailsModal
     },
     data() {
       return {
@@ -124,40 +127,8 @@
     </div>
   </Transition>
 
-  <Transition name="small-modal">
-    <div v-if="showCardDetailsModal" class="modal-mask">
-      <div class="modal-container small-modal">
-        <div class="modal-header">
-          <h3>Card Details</h3>
-          <button
-            class="modal-default-button"
-            @click="showCardDetailsModal = false"
-          >X</button>
-        </div>
+  <CardDetailsModal :show=this.showCardDetailsModal @close="this.showCardDetailsModal = false" />
 
-        <div class="modal-body">
-          <label>Quantity</label>
-	  <input type="number">
-          <label>Finish</label>
-          <select id="finish"></select>
-          <label>Language</label>
-          <select id="language"></select>
-          <label>Condition</label>
-          <select id="condition">
-            <option>Near Mint</option>
-            <option>Lightly Played</option>
-            <option>Moderately Played</option>
-            <option>Heavily Played</option>
-            <option>Damaged</option>
-          </select>
-        </div>
-
-        <div class="modal-footer">
-          <button class="modal-default-button" @click="addCard()" ref="addCard">Add</button>
-        </div>
-      </div>
-    </div>
-  </Transition>
 </template>
 
 <style scoped>
@@ -176,12 +147,6 @@
 .big-modal {
   width: 95%;
   height: 95%;
-}
-
-.small-modal {
-  width: 35%;
-  height: 35%;
-  z-index: 9999;
 }
 
 .modal-container {
@@ -204,28 +169,5 @@
 
 .modal-default-button {
   float: right;
-}
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter-from {
-  opacity: 0;
-}
-
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-from .modal-container,
-.modal-leave-to .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
 }
 </style>
