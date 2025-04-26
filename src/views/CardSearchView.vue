@@ -31,24 +31,6 @@
       ),
       filter: function (e) {
       },
-      addCard: async function () {
-        var response = await fetch("/api/1/collection/update", {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            card_id: this.cards[0].id,
-            quantity: 1
-          })
-        })
-
-        console.log(response)
-
-        this.showCardDetailsModal = false
-        this.searchQuery = ""
-        this.$refs.mainSearch.focus()
-      },
       selectCard: function () {
         // This is probably relying on side incidental values
         // I should probably give this it's own option in cardOptionsStore
@@ -60,7 +42,12 @@
         }
         // TODO: Display something if condition isn't true ^
         // to tell the user why nothing is happening
-      }
+      },
+      closeCardDetailsModal: function () {
+        this.showCardDetailsModal = false
+        this.searchQuery = ""
+        this.$refs.mainSearch.focus()
+      },
     },
     watch: {
       searchQuery: function() {
@@ -120,7 +107,7 @@
     </div>
   </Transition>
 
-  <CardDetailsModal :show=this.showCardDetailsModal :card=this.selectedCard @close="this.showCardDetailsModal = false" @addCard="addCard()" />
+  <CardDetailsModal :show=this.showCardDetailsModal :card=this.selectedCard @close="this.closeCardDetailsModal()" />
 
 </template>
 

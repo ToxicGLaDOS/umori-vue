@@ -6,6 +6,8 @@
   })
   const addCardButton = ref(null);
   const languages = ref(null)
+  const emit = defineEmits(['close'])
+
 
   watch(() => props.show, async (newShow, oldShow) => {
     if (newShow == true) {
@@ -22,6 +24,22 @@
         })
     }
   })
+
+  async function addCard() {
+    var response = await fetch("/api/1/collection/update", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        card_id: props.card.id,
+        quantity: 1
+      })
+    })
+
+    console.log(response)
+    emit('close')
+  }
 
 </script>
 
@@ -59,7 +77,7 @@
         </div>
 
         <div class="modal-footer">
-          <button class="modal-default-button" @click="$emit('addCard')" ref="addCardButton">Add</button>
+          <button class="modal-default-button" @click="addCard" ref="addCardButton">Add</button>
         </div>
       </div>
     </div>
