@@ -11,7 +11,11 @@
       imageURL: String,
       name: String,
       setCode: String,
-      collectorNumber: String
+      collectorNumber: String,
+      show: {
+        default: true,
+        type: Boolean
+      }
     },
     computed: {
       cardTitle() {

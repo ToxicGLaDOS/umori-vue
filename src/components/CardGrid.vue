@@ -7,9 +7,12 @@
 
 <template>
   <div id="card-grid">
-    <div v-for="card in cards" class="card-container">
-      <Card :imageURL=card.image_uris.normal :name=card.name :setCode=card.set.code :collectorNumber=card.collector_number />
-    </div>
+    <template v-for="card in cards" >
+      <!-- We check for "card.show != false" so undefined values default to true -->
+      <div class="card-container" v-if="card.show != false">
+        <Card :imageURL=card.image_uris.normal :name=card.name :setCode=card.set.code :collectorNumber=card.collector_number />
+      </div>
+    </template>
   </div>
 </template>
 

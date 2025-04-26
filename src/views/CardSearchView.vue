@@ -7,7 +7,7 @@
 
   export default {
     methods: {
-      debouceSearch: debounce(
+      debounceSearch: debounce(
         async function() {
           console.log(this.searchQuery)
           var url = new URL(`${window.location.origin}/api/cards/search`)
@@ -26,10 +26,22 @@
               .then(json => json.results)
             this.cardOptionsStore.showName = false
             this.cardOptionsStore.showSetAndNumber = true
+          this.filter()
           }
         }, 250
       ),
-      filter: function (e) {
+      filter: function () {
+        for (var card of this.cards) {
+          console.log(card)
+          console.log(card.value)
+          var setAndCN = card.set.code + ":" + card.collector_number
+          if (setAndCN.includes(this.filterQuery)) {
+            card.show = true;
+          }
+          else {
+            card.show = false;
+          }
+        }
       },
       selectCard: function () {
         // This is probably relying on side incidental values
@@ -51,7 +63,10 @@
     },
     watch: {
       searchQuery: function() {
-        this.debouceSearch()
+        this.debounceSearch()
+      },
+      filterQuery: function () {
+        this.filter()
       }
     },
     async setup() {
@@ -72,7 +87,8 @@
         selectedCard: null,
         showAddCardModal: false,
         showCardDetailsModal: false,
-        searchQuery: ""
+        searchQuery: "",
+        filterQuery: ""
       }
     }
   }
@@ -97,7 +113,7 @@
 
         <div class="modal-body">
           <input type=text @keydown.enter.prevent="selectCard()" ref="mainSearch" v-model="searchQuery">
-          <input type=text v-on:input="filter">
+          <input type=text v-on:input="filter" v-model="filterQuery">
           <CardGrid :cards=this.cards />
         </div>
 
