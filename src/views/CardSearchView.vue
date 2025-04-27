@@ -1,5 +1,5 @@
 <script>
-  import { ref } from 'vue'
+  import { ref, nextTick } from 'vue'
   import CardGrid from '../components/CardGrid.vue'
   import CardDetailsModal from '../components/CardDetailsModal.vue'
   import debounce from 'debounce';
@@ -47,7 +47,6 @@
         // This is probably relying on side incidental values
         // I should probably give this it's own option in cardOptionsStore
         // but it's fine for now
-        console.log("select card");
         if (this.cardOptionsStore.showSetAndNumber == true && this.cards.length > 0) {
           this.showCardDetailsModal = true
           this.selectedCard = this.cards[0]
@@ -58,8 +57,18 @@
       closeCardDetailsModal: function () {
         this.showCardDetailsModal = false
         this.searchQuery = ""
+        this.filterQuery = ""
         this.$refs.mainSearch.focus()
       },
+      setAddCardModalVisibility: function (show) {
+        this.showAddCardModal = show
+        if (show) {
+          // Wait till next tick because the modal doesn't exist yet
+          this.$nextTick(() => {
+            this.$refs.mainSearch.focus()
+          });
+        }
+      }
     },
     watch: {
       searchQuery: function() {
@@ -92,28 +101,27 @@
       }
     }
   }
-
-  const showAddCardModal = ref(false)
 </script>
 
 <template>
-  <button id="show-modal" @click="showAddCardModal = true">Add Card</button>
+  <button id="show-modal" @click="setAddCardModalVisibility(true)">Add Card</button>
   <CardGrid :cards=this.cards />
 
   <Transition name="big-modal">
-    <div v-if="showAddCardModal" class="modal-mask">
+    <!-- tabindex=0 allows the modal to get focus so we can capture keydown events -->
+    <div id="cardSearchModal" v-if="showAddCardModal" class="modal-mask" tabindex=0 @keydown.esc.prevent="setAddCardModalVisibility(false)" ref="cardSearchModal">
       <div class="modal-container big-modal">
         <div class="modal-header">
           <h3>Add cards</h3>
           <button
             class="modal-default-button"
-            @click="showAddCardModal = false"
+            @click="setAddCardModalVisibility(false)"
           >X</button>
         </div>
 
         <div class="modal-body">
-          <input type=text @keydown.enter.prevent="selectCard()" ref="mainSearch" v-model="searchQuery">
-          <input type=text v-on:input="filter" v-model="filterQuery">
+          <input type=text @keydown.enter.prevent="selectCard()" v-model="searchQuery" ref="mainSearch" >
+          <input type=text @keydown.enter.prevent="selectCard()" v-model="filterQuery">
           <CardGrid :cards=this.cards />
         </div>
 

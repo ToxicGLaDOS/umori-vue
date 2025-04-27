@@ -40,12 +40,12 @@
     console.log(response)
     emit('close')
   }
-
 </script>
 
 <template>
   <Transition name="small-modal">
-    <div v-if="show" class="modal-mask">
+    <!-- tabindex=0 allows the modal to get focus so we can capture keydown events -->
+    <div v-if="show" class="modal-mask" tabindex=0 @keydown.esc.prevent="$emit('close')" >
       <div class="modal-container small-modal">
         <div class="modal-header">
           <h3>Card Details</h3>
