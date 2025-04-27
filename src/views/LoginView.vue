@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { ref } from 'vue';
   var form: HTMLFormElement;
   var span: HTMLElement;
 
@@ -42,13 +43,16 @@
 
     console.log(response);
     if (response.ok) {
-      window.location.href = "/input";
+      sessionStorage.setItem("username", username.value);
+      window.location.href = "/";
     }
     else {
       // Show flash
       span.innerHTML = "Failed to log in";
     }
   }
+
+  const username = ref("");
 </script>
 
 <template>
@@ -58,7 +62,7 @@
         <h1 class="title">Login</h1>
         <span id="flash"></span>
         <div>
-          <input id="username" name="username" placeholder="Username"/>
+          <input id="username" name="username" placeholder="Username" v-model="username" />
           <input id="password" name="password" placeholder="Password"/>
         </div>
         <input class="submit" type="submit" value="Login">

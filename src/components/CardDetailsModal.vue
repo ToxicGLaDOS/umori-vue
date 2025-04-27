@@ -26,7 +26,8 @@
   })
 
   async function addCard() {
-    var response = await fetch("/api/1/collection/update", {
+    const username = sessionStorage.getItem("username");
+    var response = await fetch(`/api/${username}/collection/update`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
