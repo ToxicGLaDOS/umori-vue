@@ -1,30 +1,14 @@
-<script>
-  import { ref, nextTick } from 'vue'
+<script setup>
+  import { ref } from 'vue'
   import CardSearchModal from '../components/CardSearchModal.vue'
 
-  export default {
-    methods: {
-      setAddCardModalVisibility: function (show) {
-        this.showAddCardModal = show
-      }
-    },
-    components: {
-      CardSearchModal: CardSearchModal
-    },
-    data() {
-      return {
-        showAddCardModal: false
-      }
-    }
-  }
+  const showCardSearchModal = ref(false);
 </script>
 
 <template>
-  <button id="show-modal" @click="setAddCardModalVisibility(true)">Add Card</button>
+  <button id="show-modal" @click="showCardSearchModal = true">Add Card</button>
 
-  <CardSearchModal :show=showAddCardModal @close="showAddCardModal = false" />
-
-
+  <CardSearchModal :show=showCardSearchModal @close="showCardSearchModal = false" />
 </template>
 
 <style scoped>
