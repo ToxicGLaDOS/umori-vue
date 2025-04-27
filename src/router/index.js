@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CardSearchView from '../views/CardSearchView.vue'
+import Collection from '../views/Collection.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: CardSearchView
+      path: '/collection',
+      name: 'collection',
+      component: Collection
     },
     {
       path: '/login',
